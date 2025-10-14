@@ -8,10 +8,11 @@ Human review is pending (07/2025), use at your own risk.
 ## Features
 
 - **Offline Speech Recognition**: Uses OpenAI Whisper for local transcription
+- **Multi-Language Support**: Supports 99+ languages including English, French, Spanish, German, and more
 - **Keyboard Shortcut Control**: Press a hotkey to start/stop recording
 - **Background Operation**: Runs as a system service/daemon. For now stick to running it a script, when the script is terminated transcription is done. The system has no user interface.
 - **Cross-Application**: Works in any text input field. You need to send keyboard events using a reliable library.
-- **Configurable**: Adjustable Whisper model size and recording settings
+- **Configurable**: Adjustable Whisper model size, recording settings, and language
 
 ## How It Works
 
@@ -65,6 +66,24 @@ The system supports different Whisper model sizes. Choose based on your hardware
 - `medium`: High accuracy (~769 MB)
 - `large`: Best accuracy (~1550 MB)
 
+### Language Selection
+
+The system supports 99+ languages. Use the `--language` parameter to specify your language:
+
+- `en`: English (default)
+- `fr`: French
+- `es`: Spanish
+- `de`: German
+- `it`: Italian
+- `pt`: Portuguese
+- `ru`: Russian
+- `ja`: Japanese
+- `ko`: Korean
+- `zh`: Chinese
+- And many more...
+
+Run `python3 voice_input.py --help` to see all supported languages.
+
 ### Keyboard Shortcut
 
 Default hotkey is `Ctrl+Shift+V`. You can modify this in the configuration section of `voice_input.py`.
@@ -85,8 +104,14 @@ Default recording settings:
 # Run in foreground (for testing)
 python3 voice_input.py
 
+# Run with French language support
+python3 voice_input.py --language fr
+
+# Run with specific model and language
+python3 voice_input.py --model base --language fr
+
 # Run in background
-python3 voice_input.py &
+python3 voice_input.py --language fr &
 
 # Run as systemd service (recommended for permanent use)
 sudo systemctl start voice-input
