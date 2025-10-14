@@ -46,7 +46,7 @@ Use Python.
 ### Main Script Structure
 
 ```
-voice_input.py
+mic2key.py
 ├── VoiceInputSystem class
 ├── Audio recording management
 ├── Whisper transcription
@@ -141,7 +141,7 @@ import logging
 
 ## File Structure to Generate
 ```
-voice_input.py          # Main script
+mic2key.py          # Main script
 requirements.txt        # Python dependencies
 config.py              # Configuration options (optional)
 # Other code file to get a proper system
