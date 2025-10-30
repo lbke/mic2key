@@ -4,8 +4,9 @@ import os
 from typing import Optional
 
 class TranscriptionHandler:
-    def __init__(self, model_name: str = "base"):
+    def __init__(self, model_name: str = "base", language: str = "en"):
         self.model_name = model_name
+        self.language = language
         self.model: Optional[whisper.Whisper] = None
         self.logger = logging.getLogger(__name__)
         
@@ -29,8 +30,8 @@ class TranscriptionHandler:
             return None
             
         try:
-            self.logger.info("Starting transcription...")
-            result = self.model.transcribe(audio_file_path, language="en")
+            self.logger.info(f"Starting transcription (language: {self.language})...")
+            result = self.model.transcribe(audio_file_path, language=self.language)
             
             transcribed_text = result.get("text", "").strip()
             

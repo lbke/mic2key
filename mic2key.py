@@ -8,6 +8,7 @@ import signal
 import sys
 import time
 from enum import Enum
+import whisper
 
 from audio_recorder import AudioRecorder
 from transcription_handler import TranscriptionHandler
@@ -23,15 +24,17 @@ class VoiceInputSystem:
     def __init__(self, 
                  whisper_model: str = "base",
                  max_recording_duration: int = 30,
+                 language: str = "en",
                  debug: bool = False):
         
         self.state = SystemState.IDLE
         self.debug = debug
+        self.language = language
         
         # Initialize components
         self.file_manager = TempFileManager()
         self.audio_recorder = AudioRecorder(max_duration=max_recording_duration, file_manager=self.file_manager)
-        self.transcription_handler = TranscriptionHandler(model_name=whisper_model)
+        self.transcription_handler = TranscriptionHandler(model_name=whisper_model, language=language)
         self.keyboard_controller = KeyboardController()
         self.hotkey_listener = HotkeyListener(self._on_hotkey_pressed)
         
@@ -69,7 +72,7 @@ class VoiceInputSystem:
             self.logger.error("Failed to start hotkey listener")
             return False
         
-        self.logger.info("Voice input system ready. Press Ctrl+Shift+Space to start/stop recording.")
+        self.logger.info(f"Voice input system ready (language: {self.language}). Press Ctrl+Shift+Space to start/stop recording.")
         return True
     
     def _on_hotkey_pressed(self):
@@ -182,6 +185,13 @@ def main():
         action="store_true",
         help="Enable debug logging"
     )
+    parser.add_argument(
+        "--language",
+        default="en",
+        choices=list(whisper.tokenizer.LANGUAGES.keys()),
+        help="Language for speech recognition (default: en). Supported: " + 
+             ", ".join(sorted(whisper.tokenizer.LANGUAGES.keys())[:10]) + "..."
+    )
     
     args = parser.parse_args()
     
@@ -189,6 +199,7 @@ def main():
     system = VoiceInputSystem(
         whisper_model=args.model,
         max_recording_duration=args.max_duration,
+        language=args.language,
         debug=args.debug
     )
     
